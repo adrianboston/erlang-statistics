@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
 %%% File    : statistics.erl
-%%% Author  :  <whoppix@localhost.localdomain>
+%%% Author  :  whoppix <jwringstad@gmail.com>
 %%% Description : 
 %%%
-%%% Created : 26 Jul 2009 by  <whoppix@localhost.localdomain>
+%%% Created : 26 Jul 2009 by  <jwringstad@gmail.com>
 %%%-------------------------------------------------------------------
 -module(statistics).
 -export([start/0, start_link/0, init/0, loop/0]).
