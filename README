@@ -8,6 +8,14 @@ THE ERLANG PART:
 just let your supervisor start the statistics process like you would start any other process (i.e. using statistics:start_link()).
 mochijson2.erl needs to be compiled and in your codepath.
 
+CONFIGURING THE ERLANG PART
+
+statistics.erl has two defines:
+-define(OUTFILE, "stats.jsn").
+-define(INTERVAL, 10*1000). % in milliseconds
+just adjust those to your needs or feel free to replace or adapt them to some more complicated configuration mechanism.
+
+
 THE PERL PART:
 first install the following prerequisites:
 - JSON
