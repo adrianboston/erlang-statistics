@@ -1,0 +1,1 @@
+Refer to these examples if you want to write your own charts. the baseclass Stats::Base already gives you most of the important methods (write() etc pp), and you only need to implement the actual data processing.

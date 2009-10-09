@@ -1,0 +1,23 @@
+{
+    "date":1250346297,
+        "memory_usage":
+        {
+            "total":45603856,
+            "processes":36882560,
+            "processes_used":36878856,
+            "system":8721296,
+            "atom":626613,
+            "atom_used":594410,
+            "binary":496704,
+            "code":4830924,
+            "ets":292924
+        },
+        "context_switches":29048262,
+        "garbage_collections":3851629,
+        "input":5216195,
+        "output":103890273,
+        "running_queue":0,
+        "kernel_poll":true,
+        "process_count":331,
+        "process_limit":327
+}

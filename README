@@ -1,0 +1,39 @@
+this is a simple quick'n'dirty chart generator for erlang systems. The erlang side consists of a little process that takes statistics every soandso many milliseconds, and writes them to a file in JSON format using mochijson2.
+
+The perl side uses JSON (pure perl) or JSON::XS (C backend, much faster) to parse the json, and Chart::Strip to output nice-looking charts in png or jpg format.
+
+SETUP:
+
+THE ERLANG PART:
+just let your supervisor start the statistics process like you would start any other process (i.e. using statistics:start_link()).
+mochijson2.erl needs to be compiled and in your codepath.
+
+THE PERL PART:
+first install the following prerequisites:
+- JSON
+- Chart::Strip
+
+you can do so using cpan or cpanp (I prefer cpanp):
+
+$ cpan
+CPAN Terminal> install JSON
+... lots of output ... 
+All OK.
+CPAN Terminal> install Chart::Strip
+... lots of output ...
+All OK.
+
+To verify wether a perl library was successfully installed you can use the following command:
+perl -MLibraryname -e 'print "All OK!\n"'
+so for example:
+perl -MJSON -e 'print "All OK!\n"'
+
+CONFIGURING THE PERL PART
+if you look at the top of generate.pl you'll see the following:
+my $STATFILE = "../erlang/stats.jsn";
+my $OUTPUT_DIR = ".";
+my $FORMAT = "png";
+
+$STATFILE is the json file to be parsed.
+$OUTPUT_DIR is the directory where the generated images are to be saved.
+$FORMAT can be either png or jpg.
