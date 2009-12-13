@@ -10,6 +10,7 @@ sub process {
 	my @ports;
     my @process_limit;
     my @switches;
+    my @running_queue;
     my $last_switches = 0;
     foreach my $hash ( @{$list_ref} ) {
 		push @processes,
@@ -31,6 +32,11 @@ sub process {
             # server got restarted, reset $last_switches.
             $last_switches = 0;
           }
+		  push @running_queue,
+		  {
+			time  => $hash->{date},
+			value => $hash->{running_queue},
+		  };
           push @switches,
           {
             time => $hash->{date},
@@ -42,11 +48,10 @@ sub process {
       
       }
 	
-    $self->{chart}->add_data( \@processes, { label => 'Processes', style => 'line', color => shift @{$self->{colorset_ref}} } );
+    $self->{chart}->add_data( \@processes, { label => 'Process count', style => 'line', color => shift @{$self->{colorset_ref}} } );
     $self->{chart}->add_data( \@process_limit, { label => 'Process limit', style => 'line', color => shift @{$self->{colorset_ref}} } );
-    $self->{chart}->add_data( \@ports, { label => 'ports', style => 'line', color => shift @{$self->{colorset_ref}} } );
+    $self->{chart}->add_data( \@ports, { label => 'Ports count', style => 'line', color => shift @{$self->{colorset_ref}} } );
     $self->{chart}->add_data( \@switches, { label => 'Context switches', style => 'line', color => shift @{$self->{colorset_ref}} } );
-    #$self->{chart}->add_data( \@processes, { label => 'Processes', style => 'line', color => shift @{$self->{colorset_ref}} } );
-    #$self->{chart}->add_data( \@processes, { label => 'Processes', style => 'line', color => shift @{$self->{colorset_ref}} } );
+    $self->{chart}->add_data( \@running_queue, { label => 'Queued Processes', style => 'line', color => shift @{$self->{colorset_ref}} } );
 }
 1;

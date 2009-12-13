@@ -32,8 +32,8 @@
             }
         },
         {
-            "class":"General",
-            "filename":"general.png",
+            "class":"NodeInfo",
+            "filename":"node-info.png",
             "style_options":{
                 "y_label":"Amount"      // you typically want to set at least the y_label option.
             }

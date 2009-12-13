@@ -39,8 +39,9 @@ sub process {
           };
       }
     $self->{chart}->add_data( \@running_nodes, { label => 'Running mnesia nodes', style => 'line', color => shift @{$self->{colorset_ref}} } );
-    $self->{chart}->add_data( \@persistent_nodes, { label => 'Persistent nodes', style => 'line', color => shift @{$self->{colorset_ref}} } );
-    $self->{chart}->add_data( \@held_locks, { label => 'Locks held by the manager', style => 'line', color => shift @{$self->{colorset_ref}} } );
+    $self->{chart}->add_data( \@persistent_nodes, { label => 'Persistent mnesia nodes', style => 'line', color => shift @{$self->{colorset_ref}} } );
+    $self->{chart}->add_data( \@held_locks, { label => 'Locks held by the transaction manager', 
+            style => 'line', color => shift @{$self->{colorset_ref}} } );
     $self->{chart}->add_data( \@known_tables, { label => 'Known tables', style => 'line', color => shift @{$self->{colorset_ref}} } );
     $self->{chart}->add_data( \@running_transactions, { label => 'Running transactions', style => 'line', color => shift @{$self->{colorset_ref}} } );
 }
