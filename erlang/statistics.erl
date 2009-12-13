@@ -56,7 +56,8 @@ get_statistics() ->
  
 write_line(String) ->
     {ok, IoDevice} = file:open(?OUTFILE, [append]),
-    ok = file:write(IoDevice, list_to_binary(lists:flatten(String) ++ "\n")).
+    ok = file:write(IoDevice, list_to_binary(lists:flatten(String) ++ "\n")),
+    ok = file:close(IoDevice).
  
 encode_statistics_json(Epoch, MemoryUsage, ContextSwitches, GarbageCollections, {Input, Output},
     RunningQueue, KernelPoll, ProcessCount, ProcessLimit) ->
