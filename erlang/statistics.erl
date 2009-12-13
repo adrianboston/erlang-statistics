@@ -9,7 +9,7 @@
 -export([start/0, start_link/0, init/0, loop/0]).
 -compile([export_all]).
 -define(OUTFILE, "stats.jsn").
--define(INTERVAL, 1*1000). % in milliseconds
+-define(INTERVAL, 10*1000). % in milliseconds
 
 
 
@@ -29,9 +29,7 @@ init() ->
 loop() ->
     receive
 	make_statistics ->
-        io:format("Making stats...~n"),
         {ok, _ } = timer:send_after(?INTERVAL, make_statistics),
-        io:format("set timer~n"),
         Mnesia = try get_mnesia_statistics() of
             Val -> Val
         catch
@@ -41,10 +39,9 @@ loop() ->
         ++ get_memory_statistics()
         ++ Mnesia
         ++ get_additional_statistics(),
-        io:format("got stats: ~p~n", [StatList]),
         String = encode_statistics_json(StatList),
         write_line(String) 
-        %proc_lib:hibernate(?MODULE, loop, [])
+        proc_lib:hibernate(?MODULE, loop, [])
     end,
     io:format("done~n"),
     ?MODULE:loop().
@@ -109,7 +106,6 @@ get_additional_statistics() -> % You must construct additional pylons
  
 write_line(String) ->
     {ok, IoDevice} = file:open(?OUTFILE, [append]),
-    io:format("stats: ~s~n", [String]),
     ok = file:write(IoDevice, list_to_binary(lists:flatten(String) ++ "\n")),
     ok = file:close(IoDevice).
  
