@@ -1,6 +1,6 @@
 {
     "output_dir":".",                   // Directory to put the images into
-    "statfile":"stats.jsn",             // the statfile to parse 
+    "statfile":"../erlang/stats.jsn",   // the statfile to parse 
     "output_format":"png",              // outputformat to use. "png" or "jpg"
     "colorset":                         // colorset for the graphs. Line colors will cycle through this colorset.
         ["000077",
@@ -21,7 +21,7 @@
             "filename":"ramusage.png", 
             "style_options":{           // Style options, if none given defaults are assumed. Some of them might suck.
                 "y_label":"Memory usage (Bytes)",
-                "binary":1
+                "binary":true
             }
         },
         {
@@ -30,6 +30,29 @@
             "style_options":{
                 "y_label":"Amount"      // you typically want to set at least the y_label option.
             }
+        },
+        {
+            "class":"General",
+            "filename":"general.png",
+            "style_options":{
+                "y_label":"Amount"      // you typically want to set at least the y_label option.
+            }
+        },
+        {
+            "class":"Processes",
+            "filename":"processes.png",
+            "style_options":{
+                "y_label":"Amount"      // you typically want to set at least the y_label option.
+            }
+        },
+        {
+            "class":"IO",
+            "filename":"io.png",
+            "style_options":{
+                "y_label":"Input/Output (Bytes)",      // you typically want to set at least the y_label option.
+                "binary":true
+            }
         }
+
     ] 
 }

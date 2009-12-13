@@ -3,29 +3,22 @@
 use strict;
 use warnings;
 use lib 'lib';
-use Stat::RamUsage;
-use Stat::IO;
-
-
 use JSON;
+use Benchmark ':hireswallclock';
+
+die "This script needs exactly one argument. Usage: `perl generate.pl config.jsn`" unless @ARGV == 1;
 
 ################# CONFIG #############
 
-my $STATFILE = "../erlang/stats.jsn";
-my $OUTPUT_DIR = ".";
-my $FORMAT = "png";
-
-my %margin_opts = (    # general styling options
+my %default_style_opts = (    # general styling options
 	margin_left   => 15,
 	margin_bottom => 10,
 	margin_right  => 0,
 	margin_top    => 4,
 	width         => 770,
 	height        => 250,
-);
 
-my %ram_usage_opts = (
-	'y_label'        => 'Memory usage (bytes)',
+	'y_label'        => 'Default Label',
 	draw_tic_labels  => 1,
 	draw_data_labels => 1,
 	thickness        => 2,
@@ -33,60 +26,60 @@ my %ram_usage_opts = (
 	draw_border      => 0,
 	x_label          => 'Time',
 	data_label_style => 'box',
-	binary           => 1,
-	%margin_opts,
 );
 
-my %io_opts = (
-	'y_label'        => 'Overall Input/Output (Bytes/Time)',
-	draw_tic_labels  => 1,
-	draw_data_labels => 1,
-	thickness        => 2,
-	draw_grid        => 1,
-	draw_border      => 0,
-	x_label          => 'Zeit',
-	binary           => 1,
-	data_label_style => 'box',
-	%margin_opts,
-);
+############## PARSING CONFIGFILE ##############
+my $config = parse_config(shift @ARGV);
 
+# checking wether fast json via XS is enforced
+die "[E] Fast JSON::XS backend for JSON parsing is not available, but config enforces the use of a fast backend."
+    if JSON->backend ne "JSON::XS" and $config->{enforce_fast_json};
 
-my @colorset = qw/000077 ef8b2f 7bcf6f cccccc 2b9842 b9cb33 666666 cf6f6f 6f7bcf 6fcfc8 cfc66f/;
-
-############################## START MAINLINE ##############################
-# this is the part you want to extend if you want more different charts.
-
+############## PARSING STATFILE ################
 print "[*] Starting statfile parsing\n";
-my $dataset_ref = read_stats($STATFILE);
+my $stats;
+my $time = timeit(1, sub {
+        $stats = read_stats($config->{statfile});
+    });
+print "[*] Done parsing statfile. \n\tParsing took " . timestr($time) . "\n";
 
-print "[*] Generating RamUsage chart\n";
-my $ram_usage = Stat::RamUsage->new( \@colorset, \%ram_usage_opts );
-$ram_usage->process( $dataset_ref );
-$ram_usage->write_png( $OUTPUT_DIR . "/ram-usage-vs-time.png" );
+############## STARTING OUTPUT ##################
+print "[*] Start plotting...\n";
+sub plot_dataset {
+    foreach my $object (@{$config->{statistics}}) {
+        print "\t~> Plotting " . $object->{class} . "   ->   " . $object->{filename} . "\n";
+        my $class = "Stat::" . $object->{class};
+        require "Stat/" . $object->{class} . ".pm";
+        my %styleopts = (%default_style_opts, %{$object->{style_options}});
+        my $plotter = $class->new($config->{colorset}, \%styleopts);
+        $plotter->process($stats);
+        if($config->{output_format} eq "png"){
+            $plotter->write_png($object->{filename});
+        }
+        else {
+            $plotter->write_jpg($object->{filename});
+        }
+    }
+}
+$time = timeit(1, \&plot_dataset);
+print "[*] Done plotting all charts.\n\tOverall plotting time: " . timestr($time) . "\n";
 
-print "[*] Generationg IO chart\n";
-my $io = Stat::IO->new( \@colorset, \%io_opts );
-$io->process($dataset_ref);
-$io->write_png( $OUTPUT_DIR . "/io-vs-time.png" );
-print "[*] Done.\n";
 
-
-
-
-
-
-
-
-
-
-
-
-
-############################## START FUNCTIONS #############################
+############## START ASSISTANT FUNCTIONS ################
+sub parse_config {
+    my $file = shift;
+    my $content = do 
+                { 
+                    local $/ = undef;
+                    open my $fh, '<', $file or die "[E] Couldn't open $file for reading: $!";
+                    <$fh>;
+                };
+    from_json $content;
+}
 sub read_stats {
 	my $stat_file = shift;
 	my @slurp;
-	open my $handle, '<', $stat_file or die "Couldn't open $stat_file for reading: $!";
+	open my $handle, '<', $stat_file or die "[E] Couldn't open $stat_file for reading: $!";
 	@slurp = <$handle>;
 	close $handle;
 	map { $_ = decode_json $_ } @slurp;
