@@ -1,0 +1,35 @@
+{
+    "output_dir":".",                   // Directory to put the images into
+    "statfile":"stats.jsn",             // the statfile to parse 
+    "output_format":"png",              // outputformat to use. "png" or "jpg"
+    "colorset":                         // colorset for the graphs. Line colors will cycle through this colorset.
+        ["000077",
+        "ef8b2f",
+        "7bcf6f",
+        "cccccc",
+        "2b9842",
+        "b9cb33",
+        "666666",
+        "cf6f6f",
+        "6f7bcf",
+        "6fcfc8",
+        "cfc66f"],
+    "enforce_fast_json":false,          // enforce the fast JSON parsing backend written in C
+    "statistics":[                      // insert all modules you want here.
+        {
+            "class":"RamUsage",         // Plot RamUsage class into ramusage.png 
+            "filename":"ramusage.png", 
+            "style_options":{           // Style options, if none given defaults are assumed. Some of them might suck.
+                "y_label":"Memory usage (Bytes)",
+                "binary":1
+            }
+        },
+        {
+            "class":"Mnesia",
+            "filename":"mnesia.png",
+            "style_options":{
+                "y_label":"Amount"      // you typically want to set at least the y_label option.
+            }
+        }
+    ] 
+}
