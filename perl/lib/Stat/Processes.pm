@@ -27,7 +27,11 @@ sub process {
             time => $hash->{date},
             value => $hash->{ports},
           };
-	      push @switches,
+	      if($hash->{context_switches} - $last_switches < 0) {
+            # server got restarted, reset $last_switches.
+            $last_switches = 0;
+          }
+          push @switches,
           {
             time => $hash->{date},
             value => $hash->{context_switches} - $last_switches

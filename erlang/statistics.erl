@@ -40,7 +40,7 @@ loop() ->
         ++ Mnesia
         ++ get_additional_statistics(),
         String = encode_statistics_json(StatList),
-        write_line(String) 
+        write_line(String), 
         proc_lib:hibernate(?MODULE, loop, [])
     end,
     io:format("done~n"),
