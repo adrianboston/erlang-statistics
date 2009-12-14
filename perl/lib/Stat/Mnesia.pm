@@ -15,27 +15,27 @@ sub process {
 		  push @running_nodes,
 		  {
 			time  => $hash->{date},
-			value => defined $hash->{running_nodes} ? $hash->{running_nodes} : 0,
+			value => $hash->{running_nodes},
 		  };
           push @persistent_nodes,
           {
             time => $hash->{date},
-            value => defined $hash->{persistent_nodes} ? defined $hash->{persistent_nodes} : 0,
+            value => $hash->{persistent_nodes},
           };
           push @held_locks, 
           {
             time => $hash->{date},
-            value => defined $hash->{held_locks} ? $hash->{held_locks} : 0,
+            value => $hash->{held_locks},
           };
           push @known_tables, 
           {
             time => $hash->{date},
-            value => defined $hash->{known_tables} ? $hash->{known_tables} : 0,
+            value => $hash->{known_tables},
           };
           push @running_transactions, 
           {
             time => $hash->{date},
-            value => defined $hash->{running_transactions} ? $hash->{running_transactions} : 0,
+            value => $hash->{running_transactions},
           };
       }
     $self->{chart}->add_data( \@running_nodes, { label => 'Running mnesia nodes', style => 'line', color => shift @{$self->{colorset_ref}} } );

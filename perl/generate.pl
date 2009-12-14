@@ -36,7 +36,7 @@ die "[E] Fast JSON::XS backend for JSON parsing is not available, but config enf
     if JSON->backend ne "JSON::XS" and $config->{enforce_fast_json};
 
 ############## PARSING STATFILE ################
-print "[*] Starting statfile parsing\n";
+#print "[*] Starting statfile parsing\n";
 my $stats;
 my $time = timeit(1, sub {
         $stats = read_stats($config->{statfile});
@@ -47,7 +47,7 @@ print "[*] Done parsing statfile. \n\tParsing took " . timestr($time) . "\n";
 print "[*] Start plotting...\n";
 sub plot_dataset {
     foreach my $object (@{$config->{statistics}}) {
-        print "\t~> Plotting " . $object->{class} . "   ->   " . $object->{filename} . "\n";
+        print "\t~> Plotting " . $object->{class} . "\t->\t" . $object->{filename} . "\n";
         my $class = "Stat::" . $object->{class};
         require "Stat/" . $object->{class} . ".pm";
         my %styleopts = (%default_style_opts, %{$object->{style_options}});
@@ -82,7 +82,13 @@ sub read_stats {
 	open my $handle, '<', $stat_file or die "[E] Couldn't open $stat_file for reading: $!";
 	@slurp = <$handle>;
 	close $handle;
-	map { $_ = decode_json $_ } @slurp;
+	my $line = 0;
+    map { 
+        $line++; 
+        print "\r[*]Parsing Statfile... $line/" . scalar(@slurp) . " (~" . int((100 / scalar(@slurp))*$line) . "%)";
+        $_ = decode_json $_ 
+    } @slurp;
+    print "\n";
 	return \@slurp;
 }
 

@@ -1,4 +1,4 @@
-package Stat::IO;
+package Stat::InputOutput;
 use base 'Stat::Base';
 use strict;
 use warnings;
