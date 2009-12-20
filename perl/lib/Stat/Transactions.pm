@@ -50,7 +50,7 @@ sub process {
       }
     $self->{chart}->add_data( \@transaction_commits, { label => 'Comitted transactions', style => 'line', color => shift @{$self->{colorset_ref}} } );
     $self->{chart}->add_data( \@transaction_failures, { label => 'Failed transactions',
-            style => 'line', color => shift @{$self->{colorset_ref}} } );
+            style => 'line', color => "FF0000" } );
     $self->{chart}->add_data( \@transaction_restarts, { label => 'Restarted transactions', style => 'line', color => shift @{$self->{colorset_ref}} } );
     $self->{chart}->add_data( \@transaction_log_writes, { label => 'Transaction log writes', 
             style => 'line', color => shift @{$self->{colorset_ref}} } );

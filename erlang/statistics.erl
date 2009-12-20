@@ -9,7 +9,7 @@
 -export([start/0, start_link/0, init/0, loop/0]).
 -compile([export_all]).
 -define(OUTFILE, "stats.jsn").
--define(INTERVAL, 10*1000). % in milliseconds
+-define(INTERVAL, 1*1000). % in milliseconds
 
 
 

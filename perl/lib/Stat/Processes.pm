@@ -50,7 +50,7 @@ sub process {
 	
     $self->{chart}->add_data( \@switches, { label => 'Context switches', style => 'line', color => shift @{$self->{colorset_ref}} } );
     $self->{chart}->add_data( \@processes, { label => 'Process count', style => 'line', color => shift @{$self->{colorset_ref}} } );
-    $self->{chart}->add_data( \@process_limit, { label => 'Process limit', style => 'line', color => shift @{$self->{colorset_ref}} } );
+    $self->{chart}->add_data( \@process_limit, { label => 'Process limit', style => 'line', color => "FF0000" } );
     $self->{chart}->add_data( \@ports, { label => 'Ports count', style => 'line', color => shift @{$self->{colorset_ref}} } );
     $self->{chart}->add_data( \@running_queue, { label => 'Queued Processes', style => 'line', color => shift @{$self->{colorset_ref}} } );
 }
