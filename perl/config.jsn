@@ -18,7 +18,7 @@
     "statistics":[                      
         {
             "class":"RamUsage",          
-            "filename":"ramusage.png", 
+            "filename":"memory-usage.png", 
             "style_options":{           
                 "y_label":"Memory usage (Bytes)",
                 "binary":true
@@ -58,6 +58,20 @@
             "filename":"transactions.png",
             "style_options":{
                 "y_label":"Transactions"
+            }
+        },
+        {
+            "class":"LoadedModules",
+            "filename":"loaded-modules.png",
+            "style_options":{
+                "y_label":"Modules"    
+            }
+        },
+        {
+            "class":"GarbageCollections",
+            "filename":"garbage-collections.png",
+            "style_options":{
+                "y_label":"GC runs"    
             }
         }
     ] 

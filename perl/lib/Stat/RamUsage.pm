@@ -25,7 +25,6 @@ sub process {
     $self->{chart}->add_data( \@code, { label => 'Code memory', style => 'line', color => shift @{$self->{colorset_ref}} } );
     $self->{chart}->add_data( \@ets, { label => 'ets memory', style => 'line', color => shift @{$self->{colorset_ref}} } );
 
-
 }
 
 sub generate_set {
