@@ -74,7 +74,7 @@ sub parse_config {
                     open my $fh, '<', $file or die "[E] Couldn't open $file for reading: $!";
                     <$fh>;
                 };
-    from_json $content;
+    decode_json $content;
 }
 sub read_stats {
 	my $stat_file = shift;
