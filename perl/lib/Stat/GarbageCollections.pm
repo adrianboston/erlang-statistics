@@ -15,7 +15,8 @@ sub generate_set_cumulative {
     my $list_ref = shift;
     my $what = shift;
     my @set;
-    my $previous = 0;
+    my $previous = $list_ref->[0]->{$what};
+    # nulling out the first value, to avoid entry spike "misplottings".
     foreach my $hash (@{$list_ref}){
         if ( $hash->{$what} < $previous ) {
 				$previous = 0;

@@ -11,7 +11,8 @@ sub process {
     my @process_limit;
     my @switches;
     my @running_queue;
-    my $last_switches = 0;
+    my $last_switches = $list_ref->[0]->{context_switches};
+    # this will null out the first value, to avoid the entry spike "misplotting".
     foreach my $hash ( @{$list_ref} ) {
 		push @processes,
 		  {
