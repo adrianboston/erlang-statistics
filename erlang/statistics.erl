@@ -99,9 +99,11 @@ get_mnesia_statistics() -> % mnesia statistics
         {<<"transaction_log_writes">>, TransactionLogWrites},
         {<<"transaction_restarts">>, TransactionRestarts}
     ].
-
-get_additional_statistics() -> % You must construct additional pylons
-    [].
+%get_additional_statistics() -> [].
+get_additional_statistics() -> % To add generic statistics, uncomment and edit this function.
+    [
+        {<<"generic">>, {struct, [{<<"foo">>, 1}, {<<"bar">>, 2}]}}
+    ].
 
  
 write_line(String) ->

@@ -1,6 +1,6 @@
 This is a simple quick'n'dirty chart generator for erlang systems. The erlang side consists of a little process that takes statistics every soandso many milliseconds, and writes them to a file in JSON format using mochijson2.
 
-The perl side uses JSON (pure perl) or JSON::XS (C backend, much faster) to parse the json, and Chart::Strip to output nice-looking charts in png or jpg format.
+The perl side uses JSON (pure perl) or JSON::XS (C backend, faster by the order of magnitudes) to parse the json, and Chart::Strip to output nice-looking charts in png or jpg format.
 
 SETUP:
 
@@ -13,7 +13,13 @@ first install the following prerequisites:
 - JSON
 - Chart::Strip
 
-you can do so using cpan or cpanp (I prefer cpanp):
+you can do so using your package manager, cpan or cpanp.
+Using the local package manager usually preferable. For instance on ubuntu you would type:
+$ sudo apt-get install libjson-perl libchart-strip-perl
+or, to get the faster json-xs backend:
+$ sudo apt-get install libjson-perl libjson-xs-perl libchart-strip-perl
+
+Visa cpan:
 
 $ cpan
 CPAN Terminal> install JSON
@@ -29,11 +35,59 @@ so for example:
 perl -MJSON -e 'print "All OK!\n"'
 
 CONFIGURING THE PERL PART
-if you look at the top of generate.pl you'll see the following:
-my $STATFILE = "../erlang/stats.jsn";
-my $OUTPUT_DIR = ".";
-my $FORMAT = "png";
+the perl part is configured through a json config file, located in perl/config.jsn.
 
-$STATFILE is the json file to be parsed.
-$OUTPUT_DIR is the directory where the generated images are to be saved.
-$FORMAT can be either png or jpg.
+
+ADDING GENERIC CHARTS
+This version of erlang-statistics also supports adding arbitrary data to the json packet, so that you can use it to chart whatever you want, without
+having to actually do any programming in perl.
+
+the default configuration plots some fake data, you can disable it if you don't need it.
+
+To do this, you need to add your payload to the json packet like this:
+
+"generics":[
+    {
+      "key":1,
+      "anotherkey":2
+    }
+  ]
+
+To do this, on the erlang side, edit the function get_additional_statistics/0 like so:
+
+get_additional_statistics() ->
+  [
+    {<<"generic">>, {struct, [
+        {<<"key">>, int()},
+        {<<"anotherkey">>, int()}
+    ]}}
+  ].
+the key has to be an unique identifier.
+
+Then you have to add to the configuration:
+
+{
+            "class":"Generic",
+            "filename":"stuff.png",
+            "style_options":{
+		"type":"cumulative" // this can be "cumulative" or "normal". Cumulative assumes your data is growing all the time, "normal" assumes its not. usually, you want cumulative.
+		"data":[            // field that describes where to pull the data from.
+		  {
+		    "label":"Some stuff I want to measure", // label that appears on the graph
+		    "key":"key"                             // the key to get the data from.
+		  },
+		  {
+		    "label":"Some more stuff I want to measure",
+                    "key":"anotherkey"
+		  }
+		],
+                "y_label":"Label on the y axis"    
+            }
+        }
+This will cause Stat::Generic to render a chart from custom userdata with the given options. You can repeatedly add this to the configuration to render multiple charts,
+you can pull as many keys into one chart as you wish, and you can put as much additional information into the json hash as you like.
+
+Additional note on how to fetch the data:
+usually, you want to fetch the data in each tick. Cumulative data usually gives the most precise results, e.g. don't set your data to zero after each tick, but
+let it increase. Sending data to the statistics process instead of fetching it from it, usually leads to less precise results.
+(it is, however, of course perfectly fine to use the statistic process' state to accumulate data, and then write it out on each tick.)

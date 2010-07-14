@@ -1,6 +1,6 @@
 {
     "output_dir":".",                   
-    "statfile":"../erlang/stats.jsn",    
+    "statfile":"stats.jsn",    
     "output_format":"png",                 
     "colorset":                         
         ["000077",
@@ -73,6 +73,18 @@
             "style_options":{
                 "y_label":"GC runs"    
             }
-        }
+        },
+        {
+            "class":"Generic",
+            "filename":"generic-test.png",
+            "style_options": {
+                    "y_label":"douchebags",
+                    "type":"cumulative",
+                    "data":[
+                        {"label":"footest","key":"foo"},
+                        {"label":"bartest","key":"bar"}
+                    ]
+                }
+            }
     ] 
 }
